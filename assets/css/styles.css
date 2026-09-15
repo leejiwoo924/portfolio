@@ -1,0 +1,239 @@
+:root {
+  --color-white: #fff;
+  --color-bg: #FFFBF2;
+  --color-text: #1D1D1D;
+  --color-bubble: #E9DDFF;
+  --font-en: "ADLaM Display", system-ui;
+  --font-ko: "Pretendard", system-ui;
+  --grid-columns: 12;
+  --grid-margin: 7.5rem;
+  --grid-gutter: 1.25rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 67.5rem;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.header {
+  padding-top: 1.875rem;
+  padding-bottom: 1.875rem;
+  padding-inline: var(--grid-margin);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "ADLaM Display", system-ui;
+  font-weight: 400;
+}
+
+.header__logo-img {
+  display: block;
+  width: 6rem;
+  height: auto;
+}
+
+.header__list {
+  display: flex;
+  align-items: center;
+  gap: 6.25rem;
+}
+
+.header__link {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5rem;
+  padding-bottom: 8.125rem;
+}
+
+.hero__image {
+  display: block;
+  width: 30rem;
+  height: 30rem;
+  object-fit: contain;
+}
+
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9375rem;
+  margin-top: 0;
+  color: var(--color-text);
+  font-family: "Cafe24Surround", system-ui;
+  font-size: 3.75rem;
+  line-height: 1.4;
+  text-align: center;
+  min-height: 11.25rem;
+}
+
+.hero__line {
+  display: block;
+  min-height: 1.4em;
+}
+
+.hero__line--typing::after {
+  content: "";
+  display: inline-block;
+  width: 0.12em;
+  height: 1em;
+  margin-left: 0.15em;
+  background-color: var(--color-text);
+  vertical-align: -0.1em;
+  animation: hero-cursor 0.7s step-end infinite;
+}
+
+@keyframes hero-cursor {
+  50% {
+    background-color: transparent;
+  }
+}
+
+.about {
+  width: 100%;
+  min-height: 73.375rem;
+  background-color: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-ko);
+}
+
+.about__inner {
+  max-width: 120rem;
+  min-height: 73.375rem;
+  margin-inline: auto;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+  padding-left: 3rem;
+  padding-right: var(--grid-margin);
+}
+
+.about__title {
+  font-family: var(--font-en);
+  font-size: 3.75rem;
+  font-weight: 400;
+}
+
+.about__content {
+  display: grid;
+  grid-template-columns: minmax(0, 54.9375rem) minmax(0, 1fr);
+  column-gap: 2.6875rem;
+  align-items: start;
+  margin-top: 3.5rem;
+}
+
+.about__visual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.about__bubble {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54.9375rem;
+  height: 18.5rem;
+  padding: 2.5rem 4.5rem;
+  background-color: var(--color-bubble);
+  border-radius: 50%;
+  text-align: center;
+}
+
+.about__bubble-tail {
+  position: absolute;
+  left: 29%;
+  bottom: -3.2rem;
+  width: 5.730625rem;
+  height: 5.09375rem;
+  overflow: visible;
+}
+
+.about__bubble-tail path {
+  fill: var(--color-bubble);
+}
+
+.about__bubble-text {
+  max-width: 46rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.about__image {
+  display: block;
+  width: 34.125rem;
+  height: 34.125rem;
+  margin-top: 1.25rem;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+.about__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-top: 0;
+}
+
+.about__name {
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.about__contact {
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.about__heading {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-en);
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+
+.about__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.about__item {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.about__skills {
+  display: grid;
+  grid-template-columns: repeat(6, 3.125rem);
+  gap: 3.75rem;
+}
+
+.about__skill-icon {
+  display: block;
+  width: 3.125rem;
+  height: 3.125rem;
+  object-fit: contain;
+}
