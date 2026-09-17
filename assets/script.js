@@ -102,12 +102,14 @@ function initProjectScroll() {
     return distance > 0 ? distance : 0;
   };
 
+  const getHoldDistance = () => Math.round(window.innerHeight * 1);
+
   const syncSpacer = () => {
     if (!spacer) {
       return;
     }
 
-    spacer.style.height = `${getScrollDistance()}px`;
+    spacer.style.height = `${getScrollDistance() + getHoldDistance()}px`;
   };
 
   syncSpacer();
@@ -116,7 +118,7 @@ function initProjectScroll() {
     scrollTrigger: {
       trigger: section,
       start: "top top",
-      end: () => `+=${getScrollDistance() + window.innerHeight}`,
+      end: () => `+=${getScrollDistance() + getHoldDistance() + window.innerHeight}`,
       pin: true,
       scrub: 1,
       pinSpacing: false,
@@ -135,7 +137,7 @@ function initProjectScroll() {
   timeline.to({}, {
     duration: () => {
       const distance = getScrollDistance();
-      return distance > 0 ? window.innerHeight / distance : 1;
+      return distance > 0 ? (getHoldDistance() + window.innerHeight) / distance : 1;
     },
   });
 
