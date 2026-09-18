@@ -152,6 +152,63 @@ initAboutIntroReveal();
 initProjectIntroReveal();
 initProjectScroll();
 initIllustrationModal();
+initHeaderNav();
+
+function initHeaderNav() {
+  const links = Array.from(document.querySelectorAll(".header__link"));
+  const intro = document.querySelector("#intro");
+
+  if (!links.length || typeof gsap === "undefined") {
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const clearActive = () => {
+    links.forEach((link) => link.classList.remove("header__link--active"));
+  };
+
+  const setActive = (id) => {
+    links.forEach((link) => {
+      const isActive = link.getAttribute("href") === `#${id}`;
+      link.classList.toggle("header__link--active", isActive);
+    });
+  };
+
+  clearActive();
+
+  if (intro) {
+    ScrollTrigger.create({
+      trigger: intro,
+      start: "top bottom",
+      end: "bottom 40%",
+      onEnter: clearActive,
+      onEnterBack: clearActive,
+      onLeaveBack: clearActive,
+    });
+  }
+
+  links.forEach((link) => {
+    const id = link.getAttribute("href")?.slice(1);
+    const section = id ? document.getElementById(id) : null;
+
+    if (!section) {
+      return;
+    }
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 40%",
+      end: "bottom 40%",
+      onEnter: () => setActive(id),
+      onEnterBack: () => setActive(id),
+    });
+
+    link.addEventListener("click", () => {
+      setActive(id);
+    });
+  });
+}
 
 function initIllustrationModal() {
   const modal = document.querySelector("#illustration-modal");
