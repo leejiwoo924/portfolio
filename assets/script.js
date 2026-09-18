@@ -102,7 +102,7 @@ function initProjectScroll() {
     return distance > 0 ? distance : 0;
   };
 
-  const getHoldDistance = () => Math.round(window.innerHeight * 1);
+  const getHoldDistance = () => Math.round(window.innerHeight * 1.25);
 
   const syncSpacer = () => {
     if (!spacer) {
@@ -149,6 +149,7 @@ function initProjectScroll() {
 
 initHeroTransition();
 initAboutIntroReveal();
+initProjectIntroReveal();
 initProjectScroll();
 initIllustrationModal();
 
@@ -195,7 +196,7 @@ function initIllustrationModal() {
     3: {
       title: "PINK CAT",
       time: "작업시간: 4시간",
-      desc: "고양이 꼬리 달고 있는 Y2K 스타일 소녀",
+      desc: "고양이 꼬리 달고 있는\nY2K 스타일 소녀",
       tools: ["clip", "ps"],
       image: "./assets/images/illustration03.jpg",
     },
@@ -216,7 +217,7 @@ function initIllustrationModal() {
     6: {
       title: "SUNFLOWER",
       time: "작업시간: 6시간",
-      desc: "해바라기밭에 있는 남자 그림",
+      desc: "해바라기밭에 있는 남자",
       tools: ["clip", "ps"],
       image: "./assets/images/illustration06.png",
     },
@@ -280,6 +281,37 @@ function initAboutIntroReveal() {
         yPercent: 100,
         duration: 0.9,
         stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: introText,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    },
+  });
+}
+
+function initProjectIntroReveal() {
+  const introText = document.querySelector(".project__intro.text-reveal");
+
+  if (!introText || typeof gsap === "undefined" || typeof SplitText === "undefined") {
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  SplitText.create(introText, {
+    type: "words, lines",
+    mask: "lines",
+    autoSplit: true,
+    linesClass: "project__intro-line",
+    onSplit(self) {
+      return gsap.from(self.lines, {
+        yPercent: 20,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
         ease: "power3.out",
         scrollTrigger: {
           trigger: introText,
