@@ -153,6 +153,57 @@ initProjectIntroReveal();
 initProjectScroll();
 initIllustrationModal();
 initHeaderNav();
+initContactImageApproach();
+
+function initContactImageApproach() {
+  const image = document.querySelector(".contact__image");
+  const email = document.querySelector(".contact__email");
+
+  if (!image || !email || typeof gsap === "undefined") {
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set(email, {
+    opacity: 0,
+  });
+
+  const timeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".contact",
+      start: "top 65%",
+      end: "top 15%",
+      scrub: 1.5,
+    },
+  });
+
+  timeline.fromTo(
+    image,
+    {
+      scale: 0.45,
+      opacity: 0.35,
+    },
+    {
+      scale: 1,
+      opacity: 1,
+      ease: "power2.in",
+      duration: 1,
+      force3D: false,
+    },
+    0
+  );
+
+  timeline.to(
+    email,
+    {
+      opacity: 1,
+      ease: "none",
+      duration: 0.25,
+    },
+    0.8
+  );
+}
 
 function initHeaderNav() {
   const links = Array.from(document.querySelectorAll(".header__link"));

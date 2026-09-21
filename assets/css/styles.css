@@ -729,6 +729,8 @@ body {
   font-size: 2.5rem;
   font-weight: 400;
   line-height: 1;
+  opacity: 1;
+  color: var(--color-text);
 }
 
 .contact__image {
@@ -740,6 +742,8 @@ body {
   aspect-ratio: 1;
   margin-top: 1.875rem;
   object-fit: contain;
+  transform-origin: center center;
+  will-change: transform;
 }
 
 .contact__email {
