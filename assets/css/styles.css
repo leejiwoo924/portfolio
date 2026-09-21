@@ -165,7 +165,7 @@ body {
   margin-inline: auto;
   padding-top: 3.75rem;
   padding-bottom: 7.5rem;
-  padding-left: 16.375rem;
+  padding-left: 7.5rem;
   padding-right: var(--grid-margin);
 }
 
@@ -181,6 +181,7 @@ body {
   column-gap: 10.125rem;
   align-items: center;
   margin-top: 3.5rem;
+  margin-left: 8.875rem;
 }
 
 .about__media {
