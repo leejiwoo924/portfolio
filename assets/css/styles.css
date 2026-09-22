@@ -24,18 +24,23 @@ body {
   color: var(--color-text);
 }
 
+#scroll-container {
+  min-height: 100vh;
+}
+
 .intro {
   position: relative;
-  z-index: 1;
   min-height: 100vh;
+  padding-top: 5.25rem;
   background-color: var(--color-bg);
 }
 
 .header {
-  position: sticky;
+  position: fixed;
   top: 0.625rem;
+  left: 0;
+  right: 0;
   z-index: 50;
-  margin-top: 0.625rem;
   padding-inline: var(--grid-margin);
   pointer-events: none;
 }
@@ -153,7 +158,6 @@ body {
 
 .about {
   position: relative;
-  z-index: 2;
   width: 100%;
   background-color: var(--color-white);
   color: var(--color-text);
@@ -285,7 +289,6 @@ body {
 
 .project {
   position: relative;
-  z-index: 1;
   width: 100%;
   background-color: var(--color-white);
   color: var(--color-text);
@@ -315,6 +318,10 @@ body {
   font-family: var(--font-en);
   font-size: 3.75rem;
   font-weight: 400;
+}
+
+.project__title-line-mask {
+  overflow: clip;
 }
 
 .project__viewport {
@@ -369,12 +376,32 @@ body {
   background-color: #584D40;
 }
 
+.project__panel[data-project="pock"] {
+  background-color: #4A5D4E;
+}
+
 .project__panel[data-project="canvas"] {
   background-color: #8D7E6E;
 }
 
 .project__panel[data-project="nexdraw"] {
   background-color: #314176;
+}
+
+.project__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 0.125rem dashed rgb(255 255 255 / 35%);
+  border-radius: 0.5rem;
+  font-family: var(--font-en);
+  font-size: 2.5rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 85%);
 }
 
 .project__image {
@@ -389,15 +416,15 @@ body {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 2.5rem 2.5rem 2.5rem 5.625rem;
+  display: grid;
+  grid-template-columns: max-content;
+  align-content: start;
+  justify-content: start;
+  gap: 2.5rem;
+  padding: 10.3125rem 2.5rem 2.5rem 5.625rem;
   background-color: rgb(0 0 0 / 66%);
   color: var(--color-white);
   font-family: var(--font-ko);
-  text-decoration: none;
-  cursor: pointer;
   transform: translateY(100%);
   transition: transform 0.45s ease;
 }
@@ -408,7 +435,8 @@ body {
 }
 
 .project__overlay-inner {
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
 }
 
 .project__overlay-heading {
@@ -438,7 +466,7 @@ body {
 
 .project__overlay-meta {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content max-content;
   column-gap: 1.25rem;
   row-gap: 0.75rem;
   margin-top: 0.9375rem;
@@ -458,29 +486,41 @@ body {
   font-weight: 400;
 }
 
-.project__overlay-cta {
-  position: absolute;
-  right: 2.5rem;
-  bottom: 1.875rem;
-  display: inline-flex;
+.project__overlay-actions {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-ko);
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.75rem;
 }
 
-.project__overlay-arrow {
-  display: block;
-  width: 1.5rem;
-  height: 1.5rem;
-  object-fit: contain;
+.project__overlay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 25px;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  background-color: rgb(255 255 255 / 22%);
+  color: var(--color-white);
+  font-family: "Pretendard", var(--font-ko);
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 160%;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.project__overlay-btn:hover,
+.project__overlay-btn:focus-visible {
+  background-color: rgb(255 255 255 / 100%);
+  border-color: #fff;
+  color: #1D1D1D;
 }
 
 .illustration {
   position: relative;
-  z-index: 2;
   width: 100%;
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -744,7 +784,6 @@ body {
   margin-top: 1.875rem;
   object-fit: contain;
   transform-origin: center center;
-  will-change: transform;
 }
 
 .contact__email {

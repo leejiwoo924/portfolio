@@ -65,155 +65,147 @@ function freezeHeroGif() {
 
 freezeHeroGif();
 
-function initHeroTransition() {
-  const intro = document.querySelector("#intro");
+let resizeRefreshTimer = 0;
+let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (!intro || typeof gsap === "undefined") {
-    return;
+function refreshScroll() {
+  ScrollTrigger.refresh();
+}
+
+function scrollToSection(section) {
+  const header = document.querySelector(".header");
+  const offset = header ? header.offsetHeight + 16 : 80;
+  const top = section.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({
+    top,
+    behavior: prefersReducedMotion ? "auto" : "smooth",
+  });
+}
+
+function initScrollTrigger() {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+    return false;
   }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  ScrollTrigger.create({
-    trigger: intro,
-    start: "top top",
-    end: "+=100%",
-    pin: true,
-    pinSpacing: false,
-    scrub: true,
-    anticipatePin: 1,
+  if (typeof SplitText !== "undefined") {
+    gsap.registerPlugin(SplitText);
+  }
+
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    limitCallbacks: true,
   });
+
+  return true;
 }
 
 function initProjectScroll() {
   const section = document.querySelector("#project");
   const track = document.querySelector(".project__track");
   const viewport = document.querySelector(".project__viewport");
-  const spacer = document.querySelector(".project__spacer");
 
-  if (!section || !track || !viewport || typeof gsap === "undefined") {
+  if (!section || !track || !viewport) {
     return;
   }
 
-  gsap.registerPlugin(ScrollTrigger);
+  let scrollDistance = 0;
 
-  const getScrollDistance = () => {
-    const distance = track.scrollWidth - viewport.clientWidth;
-    return distance > 0 ? distance : 0;
+  const measure = () => {
+    scrollDistance = Math.max(track.scrollWidth - viewport.clientWidth, 0);
   };
 
-  const getHoldDistance = () => Math.round(window.innerHeight * 1.25);
+  measure();
 
-  const syncSpacer = () => {
-    if (!spacer) {
-      return;
-    }
+  gsap.to(track, {
+    x: () => -scrollDistance,
+    ease: "none",
+    force3D: true,
+    scrollTrigger: {
+      trigger: section,
+      start: "top top",
+      end: () => `+=${Math.max(scrollDistance, 1)}`,
+      pin: true,
+      scrub: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onRefresh: measure,
+    },
+  });
+}
 
-    spacer.style.height = `${getScrollDistance() + getHoldDistance()}px`;
-  };
+function initContactReveal() {
+  const section = document.querySelector(".contact");
+  const message = section?.querySelector(".contact__message");
+  const image = section?.querySelector(".contact__image");
+  const email = section?.querySelector(".contact__email");
 
-  syncSpacer();
+  if (!section) {
+    return;
+  }
 
   const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: section,
-      start: "top top",
-      end: () => `+=${getScrollDistance() + getHoldDistance() + window.innerHeight}`,
-      pin: true,
-      scrub: 1,
-      pinSpacing: false,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onRefresh: syncSpacer,
+      start: "top 70%",
+      once: true,
     },
   });
 
-  timeline.to(track, {
-    x: () => -getScrollDistance(),
-    ease: "none",
-    duration: 1,
-  });
-
-  timeline.to({}, {
-    duration: () => {
-      const distance = getScrollDistance();
-      return distance > 0 ? (getHoldDistance() + window.innerHeight) / distance : 1;
-    },
-  });
-
-  window.addEventListener("load", () => {
-    syncSpacer();
-    ScrollTrigger.refresh();
-  });
-}
-
-initHeroTransition();
-initAboutIntroReveal();
-initProjectIntroReveal();
-initProjectScroll();
-initIllustrationModal();
-initHeaderNav();
-initContactImageApproach();
-
-function initContactImageApproach() {
-  const image = document.querySelector(".contact__image");
-  const email = document.querySelector(".contact__email");
-
-  if (!image || !email || typeof gsap === "undefined") {
-    return;
+  if (message) {
+    timeline.from(
+      message,
+      {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+      },
+      0
+    );
   }
 
-  gsap.registerPlugin(ScrollTrigger);
+  if (image) {
+    timeline.fromTo(
+      image,
+      {
+        scale: 0.45,
+        opacity: 0.35,
+      },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.9,
+        ease: "power2.out",
+        force3D: true,
+      },
+      0.1
+    );
+  }
 
-  gsap.set(email, {
-    opacity: 0,
-  });
-
-  const timeline = gsap.timeline({
-    scrollTrigger: {
-      trigger: ".contact",
-      start: "top 65%",
-      end: "top 15%",
-      scrub: 1.5,
-    },
-  });
-
-  timeline.fromTo(
-    image,
-    {
-      scale: 0.45,
-      opacity: 0.35,
-    },
-    {
-      scale: 1,
-      opacity: 1,
-      ease: "power2.in",
-      duration: 1,
-      force3D: false,
-    },
-    0
-  );
-
-  timeline.to(
-    email,
-    {
-      opacity: 1,
-      ease: "none",
-      duration: 0.25,
-    },
-    0.8
-  );
+  if (email) {
+    timeline.from(
+      email,
+      {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+      },
+      0.35
+    );
+  }
 }
 
 function initHeaderNav() {
   const links = Array.from(document.querySelectorAll(".header__link"));
   const intro = document.querySelector("#intro");
 
-  if (!links.length || typeof gsap === "undefined") {
+  if (!links.length) {
     return;
   }
-
-  gsap.registerPlugin(ScrollTrigger);
 
   const clearActive = () => {
     links.forEach((link) => link.classList.remove("header__link--active"));
@@ -255,8 +247,10 @@ function initHeaderNav() {
       onEnterBack: () => setActive(id),
     });
 
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
       setActive(id);
+      scrollToSection(section);
     });
   });
 }
@@ -371,62 +365,153 @@ function initIllustrationModal() {
 }
 
 function initAboutIntroReveal() {
-  const introText = document.querySelector(".about__intro");
+  const section = document.querySelector("#profile");
+  const title = section?.querySelector(".about__title");
+  const media = section?.querySelector(".about__media");
+  const introText = section?.querySelector(".about__intro");
+  const link = section?.querySelector(".about__link");
+  const heading = section?.querySelector(".about__heading");
+  const skills = section?.querySelectorAll(".about__skill");
 
-  if (!introText || typeof gsap === "undefined" || typeof SplitText === "undefined") {
+  if (!section) {
     return;
   }
 
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top 75%",
+      once: true,
+    },
+  });
+
+  if (media) {
+    tl.from(
+      media,
+      {
+        opacity: 0,
+        duration: 1.1,
+        ease: "power2.out",
+      },
+      0
+    );
+  }
+
+  const revealItems = [title, link, heading].filter(Boolean);
+
+  if (revealItems.length) {
+    tl.from(
+      revealItems,
+      {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: "power3.out",
+      },
+      0.05
+    );
+  }
+
+  if (skills?.length) {
+    tl.from(
+      skills,
+      {
+        y: 24,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.06,
+        ease: "power3.out",
+      },
+      0.2
+    );
+  }
+
+  if (!introText || typeof SplitText === "undefined") {
+    return;
+  }
 
   SplitText.create(introText, {
     type: "lines",
     mask: "lines",
-    autoSplit: true,
+    autoSplit: false,
     linesClass: "about__intro-line",
     onSplit(self) {
-      return gsap.from(self.lines, {
-        yPercent: 100,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: introText,
-          start: "top 80%",
-          once: true,
+      tl.from(
+        self.lines,
+        {
+          yPercent: 100,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
         },
-      });
+        0.1
+      );
     },
   });
 }
 
 function initProjectIntroReveal() {
-  const introText = document.querySelector(".project__intro.text-reveal");
+  const revealTargets = document.querySelectorAll(".project__title.text-reveal, .project__intro.text-reveal");
 
-  if (!introText || typeof gsap === "undefined" || typeof SplitText === "undefined") {
+  if (!revealTargets.length || typeof SplitText === "undefined") {
     return;
   }
 
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+  revealTargets.forEach((element) => {
+    const linesClass = element.classList.contains("project__title")
+      ? "project__title-line"
+      : "project__intro-line";
 
-  SplitText.create(introText, {
-    type: "words, lines",
-    mask: "lines",
-    autoSplit: true,
-    linesClass: "project__intro-line",
-    onSplit(self) {
-      return gsap.from(self.lines, {
-        yPercent: 20,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: introText,
-          start: "top 80%",
-          once: true,
-        },
-      });
-    },
+    SplitText.create(element, {
+      type: "lines",
+      mask: "lines",
+      autoSplit: false,
+      linesClass,
+      onSplit(self) {
+        return gsap.from(self.lines, {
+          yPercent: 20,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: element,
+            start: "top 80%",
+            once: true,
+          },
+        });
+      },
+    });
   });
 }
+
+function bootAnimations() {
+  if (!initScrollTrigger()) {
+    return;
+  }
+
+  initIllustrationModal();
+  initHeaderNav();
+  initAboutIntroReveal();
+  initProjectIntroReveal();
+  initProjectScroll();
+  initContactReveal();
+
+  const finish = () => {
+    refreshScroll();
+  };
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(finish);
+  }
+
+  window.addEventListener("load", finish, { once: true });
+
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeRefreshTimer);
+    resizeRefreshTimer = window.setTimeout(refreshScroll, 200);
+  });
+}
+
+bootAnimations();
