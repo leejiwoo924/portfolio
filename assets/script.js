@@ -65,14 +65,37 @@ function freezeHeroGif() {
 
 freezeHeroGif();
 
+let locoScroll = null;
+let isRefreshingScroll = false;
 let resizeRefreshTimer = 0;
 let prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function getScrollScroller() {
+  return document.querySelector("#scroll-container") || window;
+}
+
 function refreshScroll() {
+  if (isRefreshingScroll) {
+    return;
+  }
+
+  isRefreshingScroll = true;
+  locoScroll?.update();
   ScrollTrigger.refresh();
+  isRefreshingScroll = false;
 }
 
 function scrollToSection(section) {
+  if (locoScroll) {
+    locoScroll.scrollTo(section, {
+      offset: -80,
+      duration: 1000,
+      disableLerp: false,
+      easing: [0.25, 0.0, 0.35, 1.0],
+    });
+    return;
+  }
+
   const header = document.querySelector(".header");
   const offset = header ? header.offsetHeight + 16 : 80;
   const top = section.getBoundingClientRect().top + window.scrollY - offset;
@@ -81,6 +104,74 @@ function scrollToSection(section) {
     top,
     behavior: prefersReducedMotion ? "auto" : "smooth",
   });
+}
+
+function initSmoothScroll() {
+  const container = document.querySelector("#scroll-container");
+
+  if (!container || typeof LocomotiveScroll === "undefined" || typeof gsap === "undefined") {
+    return null;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    limitCallbacks: true,
+  });
+
+  locoScroll = new LocomotiveScroll({
+    el: container,
+    smooth: !prefersReducedMotion,
+    multiplier: 1,
+    lerp: 0.1,
+    firefoxMultiplier: 50,
+    touchMultiplier: 2,
+    smartphone: {
+      smooth: false,
+    },
+    tablet: {
+      smooth: false,
+    },
+  });
+
+  locoScroll.on("scroll", ScrollTrigger.update);
+
+  ScrollTrigger.scrollerProxy(container, {
+    scrollTop(value) {
+      if (arguments.length) {
+        locoScroll.scrollTo(value, {
+          duration: 0,
+          disableLerp: true,
+        });
+        return;
+      }
+
+      return locoScroll.scroll.instance.scroll.y;
+    },
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+    },
+    pinType: container.style.transform ? "transform" : "fixed",
+  });
+
+  ScrollTrigger.defaults({
+    scroller: container,
+  });
+
+  ScrollTrigger.addEventListener("refresh", () => {
+    if (isRefreshingScroll || !locoScroll) {
+      return;
+    }
+
+    locoScroll.update();
+  });
+
+  return locoScroll;
 }
 
 function initScrollTrigger() {
@@ -106,6 +197,7 @@ function initProjectScroll() {
   const section = document.querySelector("#project");
   const track = document.querySelector(".project__track");
   const viewport = document.querySelector(".project__viewport");
+  const scroller = getScrollScroller();
 
   if (!section || !track || !viewport) {
     return;
@@ -125,6 +217,7 @@ function initProjectScroll() {
     force3D: true,
     scrollTrigger: {
       trigger: section,
+      scroller,
       start: "top top",
       end: () => `+=${Math.max(scrollDistance, 1)}`,
       pin: true,
@@ -141,6 +234,7 @@ function initContactReveal() {
   const message = section?.querySelector(".contact__message");
   const image = section?.querySelector(".contact__image");
   const email = section?.querySelector(".contact__email");
+  const scroller = getScrollScroller();
 
   if (!section) {
     return;
@@ -149,6 +243,7 @@ function initContactReveal() {
   const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: section,
+      scroller,
       start: "top 70%",
       once: true,
     },
@@ -202,6 +297,7 @@ function initContactReveal() {
 function initHeaderNav() {
   const links = Array.from(document.querySelectorAll(".header__link"));
   const intro = document.querySelector("#intro");
+  const scroller = getScrollScroller();
 
   if (!links.length) {
     return;
@@ -223,6 +319,7 @@ function initHeaderNav() {
   if (intro) {
     ScrollTrigger.create({
       trigger: intro,
+      scroller,
       start: "top bottom",
       end: "bottom 40%",
       onEnter: clearActive,
@@ -241,6 +338,7 @@ function initHeaderNav() {
 
     ScrollTrigger.create({
       trigger: section,
+      scroller,
       start: "top 40%",
       end: "bottom 40%",
       onEnter: () => setActive(id),
@@ -346,6 +444,7 @@ function initIllustrationModal() {
 
     modal.hidden = false;
     document.body.style.overflow = "hidden";
+    locoScroll?.stop();
     closeButton.focus();
   };
 
@@ -353,6 +452,7 @@ function initIllustrationModal() {
     modal.hidden = true;
     document.body.style.overflow = "";
     image.removeAttribute("src");
+    locoScroll?.start();
   };
 
   triggers.forEach((trigger) => {
@@ -372,6 +472,7 @@ function initAboutIntroReveal() {
   const link = section?.querySelector(".about__link");
   const heading = section?.querySelector(".about__heading");
   const skills = section?.querySelectorAll(".about__skill");
+  const scroller = getScrollScroller();
 
   if (!section) {
     return;
@@ -380,6 +481,7 @@ function initAboutIntroReveal() {
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: section,
+      scroller,
       start: "top 75%",
       once: true,
     },
@@ -453,6 +555,7 @@ function initAboutIntroReveal() {
 
 function initProjectIntroReveal() {
   const revealTargets = document.querySelectorAll(".project__title.text-reveal, .project__intro.text-reveal");
+  const scroller = getScrollScroller();
 
   if (!revealTargets.length || typeof SplitText === "undefined") {
     return;
@@ -477,6 +580,7 @@ function initProjectIntroReveal() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: element,
+            scroller,
             start: "top 80%",
             once: true,
           },
@@ -491,6 +595,7 @@ function bootAnimations() {
     return;
   }
 
+  initSmoothScroll();
   initIllustrationModal();
   initHeaderNav();
   initAboutIntroReveal();

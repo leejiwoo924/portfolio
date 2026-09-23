@@ -24,6 +24,14 @@ body {
   color: var(--color-text);
 }
 
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-smooth body {
+  overflow: hidden;
+}
+
 #scroll-container {
   min-height: 100vh;
 }
