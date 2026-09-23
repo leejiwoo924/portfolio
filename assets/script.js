@@ -203,29 +203,39 @@ function initProjectScroll() {
     return;
   }
 
-  let scrollDistance = 0;
+  const mm = gsap.matchMedia();
 
-  const measure = () => {
-    scrollDistance = Math.max(track.scrollWidth - viewport.clientWidth, 0);
-  };
+  mm.add("(min-width: 769px)", () => {
+    let scrollDistance = 0;
 
-  measure();
+    const measure = () => {
+      scrollDistance = Math.max(track.scrollWidth - viewport.clientWidth, 0);
+    };
 
-  gsap.to(track, {
-    x: () => -scrollDistance,
-    ease: "none",
-    force3D: true,
-    scrollTrigger: {
-      trigger: section,
-      scroller,
-      start: "top top",
-      end: () => `+=${Math.max(scrollDistance, 1)}`,
-      pin: true,
-      scrub: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onRefresh: measure,
-    },
+    measure();
+
+    const tween = gsap.to(track, {
+      x: () => -scrollDistance,
+      ease: "none",
+      force3D: true,
+      scrollTrigger: {
+        trigger: section,
+        scroller,
+        start: "top top",
+        end: () => `+=${Math.max(scrollDistance, 1)}`,
+        pin: true,
+        scrub: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onRefresh: measure,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      gsap.set(track, { clearProps: "transform" });
+    };
   });
 }
 
@@ -295,6 +305,8 @@ function initContactReveal() {
 }
 
 function initHeaderNav() {
+  const header = document.querySelector(".header");
+  const menuBtn = document.querySelector(".header__menu-btn");
   const links = Array.from(document.querySelectorAll(".header__link"));
   const intro = document.querySelector("#intro");
   const scroller = getScrollScroller();
@@ -313,6 +325,24 @@ function initHeaderNav() {
       link.classList.toggle("header__link--active", isActive);
     });
   };
+
+  const closeMenu = () => {
+    if (!header || !menuBtn) {
+      return;
+    }
+
+    header.classList.remove("is-menu-open");
+    menuBtn.setAttribute("aria-expanded", "false");
+    menuBtn.setAttribute("aria-label", "메뉴 열기");
+  };
+
+  if (menuBtn && header) {
+    menuBtn.addEventListener("click", () => {
+      const isOpen = header.classList.toggle("is-menu-open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.setAttribute("aria-label", isOpen ? "메뉴 닫기" : "메뉴 열기");
+    });
+  }
 
   clearActive();
 
@@ -348,6 +378,7 @@ function initHeaderNav() {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       setActive(id);
+      closeMenu();
       scrollToSection(section);
     });
   });

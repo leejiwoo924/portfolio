@@ -19,7 +19,12 @@
                     <img src="./assets/images/JWIOO logo.png" alt="logo" class="header__logo-img">
                 </a>
             </h1>
-            <nav class="header__nav" aria-label="주요 메뉴">
+            <button type="button" class="header__menu-btn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="header-nav">
+                <span class="header__menu-bar" aria-hidden="true"></span>
+                <span class="header__menu-bar" aria-hidden="true"></span>
+                <span class="header__menu-bar" aria-hidden="true"></span>
+            </button>
+            <nav class="header__nav" id="header-nav" aria-label="주요 메뉴">
                 <ul class="header__list">
                     <li class="header__item"><a href="#profile" class="header__link">PROFILE</a></li>
                     <li class="header__item"><a href="#project" class="header__link">PROJECTS</a></li>
@@ -134,7 +139,7 @@
                                         </div>
                                         <div class="project__overlay-meta-item">
                                             <dt>기여도</dt>
-                                            <dd>-</dd>
+                                            <dd>25%</dd>
                                         </div>
                                     </dl>
                                 </div>
