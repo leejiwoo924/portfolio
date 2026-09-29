@@ -385,7 +385,7 @@ html.has-scroll-smooth body {
 }
 
 .project__panel[data-project="pock"] {
-  background-color: #4A5D4E;
+  background-color: #81C9DD;
 }
 
 .project__panel[data-project="canvas"] {
@@ -428,8 +428,8 @@ html.has-scroll-smooth body {
   grid-template-columns: max-content;
   align-content: start;
   justify-content: start;
-  gap: 2.5rem;
-  padding: 10.3125rem 2.5rem 2.5rem 5.625rem;
+  gap: 5.3125rem;
+  padding: 9.6875rem 2.5rem 2.5rem 5.625rem;
   background-color: rgb(0 0 0 / 66%);
   color: var(--color-white);
   font-family: var(--font-ko);
