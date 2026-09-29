@@ -19,7 +19,6 @@
 }
 
 body {
-  min-height: 67.5rem;
   background-color: var(--color-bg);
   color: var(--color-text);
 }
@@ -818,8 +817,8 @@ html.has-scroll-smooth body {
   pointer-events: auto;
 }
 
-/* ========== Tablet ========== */
-@media (max-width: 1024px) {
+/* ========== Tablet 769–1024 ========== */
+@media (min-width: 769px) and (max-width: 1024px) {
   :root {
     --grid-margin: 2.5rem;
   }
@@ -886,7 +885,7 @@ html.has-scroll-smooth body {
   }
 
   .about__intro {
-    font-size: 1.0625rem;
+    font-size: 1rem;
   }
 
   .about__skills {
@@ -1002,8 +1001,13 @@ html.has-scroll-smooth body {
   }
 
   .contact {
-    padding-top: calc(0.625rem + 3.5rem + 2.5rem);
-    padding-bottom: 4rem;
+    min-height: auto;
+    padding-top: 3.75rem;
+    padding-bottom: 3.75rem;
+  }
+
+  .contact__inner {
+    flex: 0 0 auto;
   }
 
   .contact__message {
@@ -1030,6 +1034,11 @@ html.has-scroll-smooth body {
 
   .header {
     top: 0.5rem;
+    padding-inline: var(--grid-margin);
+  }
+
+  .header__logo-img {
+    width: 4rem;
   }
 
   .header__menu-btn {
@@ -1102,6 +1111,7 @@ html.has-scroll-smooth body {
   .hero {
     margin-top: 2rem;
     padding-bottom: 4rem;
+    padding-inline: var(--grid-margin);
   }
 
   .hero__image {
@@ -1118,6 +1128,8 @@ html.has-scroll-smooth body {
   .about__inner {
     padding-top: 2.5rem;
     padding-bottom: 4rem;
+    padding-left: var(--grid-margin);
+    padding-right: var(--grid-margin);
   }
 
   .about__title {
@@ -1130,6 +1142,7 @@ html.has-scroll-smooth body {
     align-items: center;
     gap: 2rem;
     margin-top: 2rem;
+    margin-left: 0;
   }
 
   .about__media {
@@ -1241,6 +1254,7 @@ html.has-scroll-smooth body {
 
   .project__overlay-heading {
     gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .project__overlay-name {
@@ -1289,6 +1303,12 @@ html.has-scroll-smooth body {
     margin-top: 1.75rem;
   }
 
+  .illustration__trigger {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
   .illustration__name {
     font-size: 2rem;
   }
@@ -1298,9 +1318,20 @@ html.has-scroll-smooth body {
   }
 
   .illustration-modal__dialog {
+    flex-direction: column;
     width: calc(100vw - 1.5rem);
+    height: auto;
+    max-height: 90vh;
     padding: 2rem 1.25rem 1.5rem;
     gap: 1rem;
+    overflow: auto;
+  }
+
+  .illustration-modal__media {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
   }
 
   .illustration-modal__name {
@@ -1330,6 +1361,7 @@ html.has-scroll-smooth body {
   .contact__email {
     margin-top: -1rem;
     font-size: 1.25rem;
+    word-break: break-all;
   }
 }
 
