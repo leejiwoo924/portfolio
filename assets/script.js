@@ -500,7 +500,7 @@ function initAboutIntroReveal() {
   const title = section?.querySelector(".about__title");
   const media = section?.querySelector(".about__media");
   const introText = section?.querySelector(".about__intro");
-  const link = section?.querySelector(".about__link");
+  const divider = section?.querySelector(".about__divider");
   const heading = section?.querySelector(".about__heading");
   const skills = section?.querySelectorAll(".about__skill");
   const scroller = getScrollScroller();
@@ -530,7 +530,7 @@ function initAboutIntroReveal() {
     );
   }
 
-  const revealItems = [title, link, heading].filter(Boolean);
+  const revealItems = [title, heading].filter(Boolean);
 
   if (revealItems.length) {
     tl.from(
@@ -543,6 +543,18 @@ function initAboutIntroReveal() {
         ease: "power3.out",
       },
       0.05
+    );
+  }
+
+  if (divider) {
+    tl.from(
+      divider,
+      {
+        scaleX: 0,
+        duration: 0.9,
+        ease: "power2.out",
+      },
+      0.45
     );
   }
 

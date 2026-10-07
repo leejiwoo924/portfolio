@@ -235,39 +235,13 @@ html.has-scroll-smooth body {
   overflow: clip;
 }
 
-.about__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+.about__divider {
+  width: 100%;
+  height: 0.0625rem;
   margin-top: 1.875rem;
-  padding: 0.75rem 1.5rem;
-  border: 0.0625rem solid var(--color-text);
-  border-radius: 999px;
-  color: var(--color-text);
-  font-size: 1.125rem;
-  font-weight: 400;
-  text-decoration: none;
-}
-
-.about__link-arrow {
-  display: inline-block;
-  transition: transform 0.25s ease;
-}
-
-.about__link:hover .about__link-arrow,
-.about__link:focus-visible .about__link-arrow {
-  animation: about-link-arrow 0.7s ease-in-out infinite;
-}
-
-@keyframes about-link-arrow {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  50% {
-    transform: translateX(0.25rem);
-  }
+  border: 0;
+  background-color: var(--color-text);
+  transform-origin: left center;
 }
 
 .about__skills-block {
